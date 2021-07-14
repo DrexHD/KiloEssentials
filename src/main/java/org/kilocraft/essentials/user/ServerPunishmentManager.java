@@ -20,13 +20,13 @@ public class ServerPunishmentManager implements PunishmentManager {
     public boolean isMuted(EntityIdentifiable user) {
         MutedPlayerList mutedPlayerList = KiloServer.getServer().getUserManager().getMutedPlayerList();
         MinecraftServer server = KiloServer.getServer().getMinecraftServer();
-        Optional<GameProfile> profile = server.getUserCache().getByUuid(user.getId());
-        if (profile.isEmpty()) {
+        GameProfile profile = server.getUserCache().method_14512(user.getId());
+        if (profile == null) {
             return false;
         }
 
-        if (mutedPlayerList.contains(profile.get()) && mutedPlayerList.get(profile.get()) != null) {
-            Date expiry = Objects.requireNonNull(mutedPlayerList.get(profile.get())).getExpiryDate();
+        if (mutedPlayerList.contains(profile) && mutedPlayerList.get(profile) != null) {
+            Date expiry = Objects.requireNonNull(mutedPlayerList.get(profile)).getExpiryDate();
             if (expiry != null) {
                 return new Date().before(expiry);
             }

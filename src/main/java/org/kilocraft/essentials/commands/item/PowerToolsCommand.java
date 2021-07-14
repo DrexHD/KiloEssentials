@@ -72,7 +72,7 @@ public class PowerToolsCommand {
     private static CompletableFuture<Suggestions> commandSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
         ItemStack item = context.getSource().getPlayer().getMainHandStack();
 
-        if (item.isEmpty() || !item.hasTag() || item.getTag() == null || !item.getTag().contains("NBTCommands"))
+        if (item.isEmpty() || !item.hasNbt() || item.getNbt() == null || !item.getNbt().contains("NBTCommands"))
             return ArgumentSuggestions.noSuggestions(context, builder);
 
         int inputLine = 0;
@@ -85,7 +85,7 @@ public class PowerToolsCommand {
             } catch (NumberFormatException ignored) { }
         }
 
-        NbtList commands = item.getTag().getList("NBTCommands", 8);
+        NbtList commands = item.getNbt().getList("NBTCommands", 8);
         String[] strings = {commands.getString(inputLine)};
         return CommandSource.suggestMatching(strings, builder);
     }
@@ -101,12 +101,12 @@ public class PowerToolsCommand {
             return -1;
         }
 
-        if (!item.hasTag() || item.getTag() == null || !item.getTag().contains("NBTCommands")) {
+        if (!item.hasNbt() || item.getNbt() == null || !item.getNbt().contains("NBTCommands")) {
             user.sendLangMessage("command.item.nothing_to_reset");
             return -1;
         }
 
-        NbtList lore = item.getTag().getList("NBTCommands", 8);
+        NbtList lore = item.getNbt().getList("NBTCommands", 8);
 
         if (inputLine >= lore.size()) {
             user.sendLangMessage("command.item.nothing_to_reset");
@@ -128,12 +128,12 @@ public class PowerToolsCommand {
             return -1;
         }
 
-        if (item.getTag() == null) {
+        if (item.getNbt() == null) {
             user.sendLangMessage("command.item.nothing_to_reset");
             return -1;
         }
 
-        Objects.requireNonNull(item.getTag()).remove("NBTCommands");
+        Objects.requireNonNull(item.getNbt()).remove("NBTCommands");
         user.sendLangMessage("command.item.reset", "command", "not-set");
         return 1;
     }
@@ -149,12 +149,12 @@ public class PowerToolsCommand {
             return -1;
         }
 
-        if (!item.hasTag() || item.getTag() == null || !item.getTag().contains("NBTCommands")) {
+        if (!item.hasNbt() || item.getNbt() == null || !item.getNbt().contains("NBTCommands")) {
             user.sendLangMessage("command.item.command.no_commands");
             return -1;
         }
 
-        NbtList commands = item.getTag().getList("NBTCommands", 8);
+        NbtList commands = item.getNbt().getList("NBTCommands", 8);
 
         MutableText text = new LiteralText("PowerTool Commands:").formatted(Formatting.GOLD);
 
@@ -181,9 +181,9 @@ public class PowerToolsCommand {
             return -1;
         }
 
-        NbtCompound itemTag = item.getTag();
+        NbtCompound itemTag = item.getNbt();
 
-        if (!item.hasTag()) {
+        if (!item.hasNbt()) {
             itemTag = new NbtCompound();
         }
 
@@ -209,7 +209,7 @@ public class PowerToolsCommand {
 
         command.set(inputLine, NbtString.of(inputString));
         itemTag.put("NBTCommands", command);
-        item.setTag(itemTag);
+        item.setNbt(itemTag);
 
         user.sendLangMessage( "command.item.set", "command", inputLine + 1, "&e:\n &7" + inputLine);
         return 1;

@@ -19,7 +19,7 @@ public class NbtCommands {
         }
 
         ItemStack stack = player.getMainHandStack();
-        NbtCompound tag = stack.getTag();
+        NbtCompound tag = stack.getNbt();
 
         if (tag == null || tag.getSize() == 0 || !tag.contains("NBTCommands")) {
             return false;

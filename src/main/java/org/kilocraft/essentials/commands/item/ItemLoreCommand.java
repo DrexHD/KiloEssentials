@@ -78,12 +78,12 @@ public class ItemLoreCommand {
 			return -1;
 		}
 
-		if (!item.hasTag() || item.getTag() == null || !item.getTag().contains("display") || !item.getTag().getCompound("display").contains("Lore")) {
+		if (!item.hasNbt() || item.getNbt() == null || !item.getNbt().contains("display") || !item.getNbt().getCompound("display").contains("Lore")) {
 			user.sendLangMessage("command.item.nothing_to_reset");
 			return -1;
 		}
 
-		NbtList lore = item.getTag().getCompound("display").getList("Lore", NBTTypes.STRING);
+		NbtList lore = item.getNbt().getCompound("display").getList("Lore", NBTTypes.STRING);
 
 		if (inputLine >= lore.size()) {
 			user.sendLangMessage("command.item.nothing_to_reset");
@@ -103,14 +103,14 @@ public class ItemLoreCommand {
 
         if (ModifyItemCommand.validate(user, item)) return -1;
 
-		if (item.getTag() == null) {
+		if (item.getNbt() == null) {
 			user.sendLangMessage("command.item.nothing_to_reset");
 			return -1;
 		}
 
         player.addExperienceLevels(-1);
 
-        item.getTag().getCompound("display").remove("Lore");
+        item.getNbt().getCompound("display").remove("Lore");
 		user.sendLangMessage("command.item.lore.reset");
 		return 1;
 	}
@@ -123,7 +123,7 @@ public class ItemLoreCommand {
 
         if (ModifyItemCommand.validate(user, item, inputString)) return -1;
 
-		NbtCompound itemTag = item.getTag();
+		NbtCompound itemTag = item.getNbt();
 
         for (Enchantment enchantment : Registry.ENCHANTMENT) {
             if (ComponentText.clearFormatting(inputString).contains(enchantment.getName(1).getString())) {
@@ -132,7 +132,7 @@ public class ItemLoreCommand {
             }
         }
 
-		if (!item.hasTag()) {
+		if (!item.hasNbt()) {
 			itemTag = new NbtCompound();
 		}
 
@@ -158,7 +158,7 @@ public class ItemLoreCommand {
         player.addExperienceLevels(-1);
         lore.set(inputLine, NbtString.of(Text.Serializer.toJson(ComponentText.toText(text))));
 		itemTag.getCompound("display").put("Lore", lore);
-		item.setTag(itemTag);
+		item.setNbt(itemTag);
 
 		user.sendLangMessage("command.item.lore.set", inputLine + 1, text);
 		return 1;

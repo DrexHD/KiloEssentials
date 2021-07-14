@@ -157,11 +157,11 @@ public class VoteReceiver extends Thread {
                 MinecraftServer server = KiloEssentials.getServer().getMinecraftServer();
                 ServerCommandSource source = server.getCommandSource();
                 for (String command : KiloConfig.main().votifier().commands) {
-                    Optional<GameProfile> optional = server.getUserCache().findByName(vote.getUsername());
-                    if (optional.isEmpty()) {
+                    GameProfile profile = server.getUserCache().method_14515(vote.getUsername());
+                    if (profile == null) {
                         continue;
                     }
-                    String name = optional.get().isComplete() ? optional.get().getName() : vote.getUsername();
+                    String name = profile.isComplete() ? profile.getName() : vote.getUsername();
                     command = command.replace("%PLAYER%", name)
                             .replace("%SERVICE%", vote.getServiceName())
                             .replace("%TIMESTAMP%", vote.getTimeStamp())
